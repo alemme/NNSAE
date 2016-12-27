@@ -31,5 +31,7 @@ Start matlab and change directory into the NNSAE folder or add the
 folder to your matlab path using addpath('where/the/NNSAE/folder/is').
 Then execute the barsExampleNNSAE.m script. Have fun!
 
+![NonNegativeAutoEncoder](http://corwww.techfak.uni-bielefeld.de/system/files/TAEFigure.png)
+
 More information:
 http://corwww.techfak.uni-bielefeld.de/non-negative-sparse-autoencoder
