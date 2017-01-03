@@ -15,7 +15,7 @@
 #   reconstruction (output argument).
 #
 ###########################################################################
-###          Copyright (c) 2016 F. A. Lemme   , CoR-Lab                 ###
+###          Copyright (c) 2016 F. A. Lemme, R. F. Reinhart   , CoR-Lab ###
 ###          Univertiy Bielefeld, Germany, http://cor-lab.de            ###
 ###########################################################################
 #
