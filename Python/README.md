@@ -30,4 +30,4 @@ Execute the barsExampleNNSAE.py script. Have fun!
 More information:
 http://corwww.techfak.uni-bielefeld.de/non-negative-sparse-autoencoder
 
-another implementation in python can be found in the ![opencog](http://wiki.opencog.org/w/The_Open_Cognition_Project) package ![here](https://github.com/opencog/python-destin/blob/master/destin/auto_encoder.py)
+another implementation in python can be found in the [opencog](http://wiki.opencog.org/w/The_Open_Cognition_Project) package [here](https://github.com/opencog/python-destin/blob/master/destin/auto_encoder.py)
