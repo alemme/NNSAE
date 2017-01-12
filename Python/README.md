@@ -21,5 +21,13 @@ Please send your feedbacks or questions to:
                            freinhar_at_cor-lab.uni-bielefeld.de
                            alemme_at_cor-lab.uni-bielefeld.de
 
+
+## START 
+Execute the barsExampleNNSAE.py script. Have fun!
+
+![NonNegativeAutoEncoder](http://corwww.techfak.uni-bielefeld.de/system/files/TAEFigure.png)
+
 More information:
 http://corwww.techfak.uni-bielefeld.de/non-negative-sparse-autoencoder
+
+another implementation in python can be found in the ![opencog](http://wiki.opencog.org/w/The_Open_Cognition_Project) package ![here](https://github.com/opencog/python-destin/blob/master/destin/auto_encoder.py)

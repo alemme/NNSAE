@@ -21,5 +21,13 @@ Please send your feedbacks or questions to:
                            freinhar_at_cor-lab.uni-bielefeld.de
                            alemme_at_cor-lab.uni-bielefeld.de
 
+## Requirements
+[A torch installation](http://torch.ch) with the gnuplot package and image package.
+
+## START 
+Execute th barsExampleNNSAE.lua script. 
+
+![NonNegativeAutoEncoder](http://corwww.techfak.uni-bielefeld.de/system/files/TAEFigure.png)
+
 More information:
 http://corwww.techfak.uni-bielefeld.de/non-negative-sparse-autoencoder
