@@ -183,6 +183,33 @@ classdef NNSAE < handle
             %read-out
             net.out = net.W * net.h;
         end
+
+        %% Get Encoding for new data
+        % H = calcHiddState(net, X)
+        % this function processes data sampels without learning
+        %
+        % input: 
+        %  - net is a Non-Negative Sparse Autoencoder object
+        %  - X is a N x M matrix holding the data input, N is the number of samples and M the dimension of each data sample
+        % output
+        %  - H Encoding Input sampels N x M
+        function H = getEncoding(net, X)
+            if isvector(X)
+                %for a single input sample
+                net.inp = X;
+                net.update();
+                H = net.h';
+            else
+                %for entire data matrix
+                H = zeros(size(X,1),net.hidDim);
+                for i=1:size(X,1) %slow implemenation!! TODO: change to Matrix operation
+                    net.inp = X(i,:)';
+                    net.update();
+                    H(i,:) = net.h';
+                end
+            end
+            
+        end
         
     end
     
