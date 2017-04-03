@@ -26,8 +26,3 @@ Please send your feedbacks or questions to:
 
 ## START 
 Execute th barsExampleNNSAE.lua script. 
-
-![NonNegativeAutoEncoder](http://corwww.techfak.uni-bielefeld.de/system/files/TAEFigure.png)
-
-More information:
-http://corwww.techfak.uni-bielefeld.de/non-negative-sparse-autoencoder
