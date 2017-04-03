@@ -20,6 +20,4 @@ reference:
 Please send your feedbacks or questions to:
                            freinhar_at_cor-lab.uni-bielefeld.de
                            alemme_at_cor-lab.uni-bielefeld.de
-
-More information:
-http://corwww.techfak.uni-bielefeld.de/non-negative-sparse-autoencoder
+                           
