@@ -12,7 +12,8 @@ reference:
 
     A. Lemme, R. F. Reinhart and J. J. Steil. 
     "Online learning and generalization of parts-based image representations 
-     by Non-Negative Sparse Autoencoders". Submitted to Neural Networks,
+     by Non-Negative Sparse Autoencoders". Neural Networks, vol. 33, pp. 194-203, 2012
+     doi = "https://doi.org/10.1016/j.neunet.2012.05.003"
                               OR
     A. Lemme, R. F. Reinhart and J. J. Steil. "Efficient online learning of
     a non-negative sparse autoencoder". In Proc. ESANN, 2010.
@@ -20,4 +21,3 @@ reference:
 Please send your feedbacks or questions to:
                            freinhar_at_cor-lab.uni-bielefeld.de
                            alemme_at_cor-lab.uni-bielefeld.de
-                           
