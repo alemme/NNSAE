@@ -1,6 +1,6 @@
 ## Overview
          Copyright (c) 2012 F. R. Reinhart, CoR-Lab
-         Univertiy Bielefeld, Germany, http://cor-lab.de
+         University Bielefeld, Germany, http://cor-lab.de
          
  The program is free for non-commercial and academic use. Please contact the
  author if you are interested in using the software for commercial purposes.
@@ -12,14 +12,15 @@ reference:
 
     A. Lemme, R. F. Reinhart and J. J. Steil. 
     "Online learning and generalization of parts-based image representations 
-     by Non-Negative Sparse Autoencoders". Submitted to Neural Networks,
+     by Non-Negative Sparse Autoencoders". Neural Networks, vol. 33, pp. 194-203, 2012
+     doi = "https://doi.org/10.1016/j.neunet.2012.05.003"
                               OR
     A. Lemme, R. F. Reinhart and J. J. Steil. "Efficient online learning of
     a non-negative sparse autoencoder". In Proc. ESANN, 2010.
 
 Please send your feedbacks or questions to:
-                           freinhar_at_cor-lab.uni-bielefeld.de
-                           alemme_at_cor-lab.uni-bielefeld.de
+                           felix.reinhart_at_gmail.com
+                           alemme01_at_t-online.de
 
 ## Requirements
 [A matlab installation](http://www.mathworks.de/products/matlab/) 

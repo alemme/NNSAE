@@ -1,6 +1,6 @@
 ## Overview
          Copyright (c) 2012 F. R. Reinhart, CoR-Lab
-         Univertiy Bielefeld, Germany, http://cor-lab.de
+         University Bielefeld, Germany, http://cor-lab.de
          
  The program is free for non-commercial and academic use. Please contact the
  author if you are interested in using the software for commercial purposes.
@@ -19,5 +19,6 @@ reference:
     a non-negative sparse autoencoder". In Proc. ESANN, 2010.
 
 Please send your feedbacks or questions to:
-                           freinhar_at_cor-lab.uni-bielefeld.de
-                           alemme_at_cor-lab.uni-bielefeld.de
+
+    felix.reinhart_at_gmail.com
+    alemme01_at_t-online.de
