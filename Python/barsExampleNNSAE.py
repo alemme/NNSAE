@@ -58,7 +58,7 @@ beta = 0           # beta [0..1] is the decay rate for positive weights
 #alpha = 1e-6;
 #beta = 1e-6;
 
-numEpochs = 10     # number of sweeps through data for learning
+numEpochs = 30     # number of sweeps through data for learning
 lrateRO = 0.01     # learning rate for synaptic plasticity of the read-out layer
 lrateIP = 0.001    # learning rate for intrinsic plasticity
 
