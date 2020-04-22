@@ -15,7 +15,7 @@ def createBarsDataSet(dim=10, numTrain=10000, numTest=5000, nonlinear=1):
 #   nonlinear - if this flag is true/1, pixel intensities at crossing points of bars are not added up
 
 
-	imgdim = dim * dim;
+	imgdim = dim * dim
 	X = zeros((numTrain+numTest, imgdim))
 	
 	for k in range (0,numTrain+numTest):
@@ -24,11 +24,11 @@ def createBarsDataSet(dim=10, numTrain=10000, numTest=5000, nonlinear=1):
 	        i = np.random.permutation(range(dim))
 	        j = np.random.permutation(range(dim))
 	        if nonlinear == 1:
-	            x[i[z],:] = 1.0;
-	            x[:,j[z]] = 1.0;
+	            x[i[z],:] = 1.0
+	            x[:,j[z]] = 1.0
 	        else:
-	            x[i[z],:] = x[i[z],:] + 1.0;
-	            x[:,j[z]] = x[:,j[z]] + 1.0;
+	            x[i[z],:] = x[i[z],:] + 1.0
+	            x[:,j[z]] = x[:,j[z]] + 1.0
 	        
 	    
 	    if not nonlinear:
