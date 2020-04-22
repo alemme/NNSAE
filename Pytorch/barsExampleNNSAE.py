@@ -34,6 +34,7 @@ from numpy.matlib import zeros
 from createBarsDataSet import createBarsDataSet
 from plotImagesOnGrid import plotImagesOnGrid
 import torch
+from torch.utils.data import TensorDataset, DataLoader
 import NNSAE as nn
 
 import math
@@ -63,6 +64,8 @@ meanIP = 0.2
 X, xTest = createBarsDataSet(width, numSamples)
 # rescale data for better numeric performance
 X = 0.25 * X
+dataset = TensorDataset(torch.from_numpy(X).float())
+dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 
 # network creation
 net = nn.Nnsae(inpDim, netDim)
@@ -78,25 +81,22 @@ net.lrateIP = lrateIP
 # training
 for e in range(1, numEpochs):
     gl_loss = 0
-    nums = list(range(numSamples))
-    random.shuffle(nums)
 
-    for i in nums:
+    for i, data in enumerate(dataloader):
         bpdc.zero_grad()
-        inp = torch.from_numpy(X[i, :]).float()
-        
-        out = net(inp)
+        inp = data[0]
+        out = net(inp.t()).t()
         loss = loss_fkt(inp, out)
         loss.backward()
-        #net.bpdc(inp-out)
-            
-        bpdc.step()
+        #bpdc.step()
         with torch.no_grad():
+            net.bpdc(inp-out)
             net.ip()
             # print(loss)
         gl_loss += loss.item()
         
-    print(f'epoch ({e}\{numEpochs}) loss {gl_loss/numSamples}')
+    #print(f'epoch ({e}\{numEpochs}) loss {gl_loss/numSamples}')
+    print('epoch ({}\{}) loss {}'.format(e, numEpochs, gl_loss/numSamples))
 ################## Evaluation ###########################
 # evaluation of basis images
 threshold = 0.1  # parameter for analysis of weights
@@ -104,7 +104,7 @@ threshold = 0.1  # parameter for analysis of weights
 # sort basis images for visualization
 cnt = 0
 unused = []
-w = net.weights.detach().t().numpy()
+w = net.weights.t().detach().numpy()
 v = zeros((w.shape))
 for i in range(netDim):
     if w[i, :].max() > threshold:  # this basis image is "used"

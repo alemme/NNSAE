@@ -53,7 +53,7 @@ class Nnsae(nn.Module):
     # output
     #  - net is the created Non-Negative Sparse Autoencoder
 
-    def __init__(self, inpDim, hidDim):
+    def __init__(self, inpDim, hidDim, batch_size=1):
         torch.autograd.set_detect_anomaly(True)
         super(Nnsae, self).__init__()
         self.inpDim = inpDim  # number of input neurons (and output neurons)
@@ -66,13 +66,13 @@ class Nnsae(nn.Module):
         self.nonlin = torch.sigmoid
         self.nonneg = lambda x: x
 
-        self.inp = torch.zeros(self.inpDim)  # vector holding current input
-        self.out = torch.zeros(self.hidDim)  # output neurons
+        self.inp = torch.zeros(self.inpDim, batch_size)  # vector holding current input
+        self.out = torch.zeros(self.hidDim, batch_size)  # output neurons
         # neural activity before non-linearity
-        self.h = torch.zeros(self.hidDim)  # hidden neuron activation
-        self.g = torch.zeros(self.hidDim)  # pre hidden neuron
-        self.a = torch.randn(self.hidDim)
-        self.b = torch.ones(self.hidDim) * (-3.0)
+        self.h = torch.zeros(self.hidDim, batch_size)  # hidden neuron activation
+        self.g = torch.zeros(self.hidDim, batch_size)  # pre hidden neuron
+        self.a = torch.randn(self.hidDim, 1)
+        self.b = torch.ones(self.hidDim, 1) * (-3.0)
 
         # learning rate for synaptic plasticity of read-out layer (RO)
         self.lrateRO = 0.01
@@ -94,16 +94,16 @@ class Nnsae(nn.Module):
         # calculate adaptive learning rate
         lrate = self.lrateRO/(self.regRO + sum(self.h**2))
         self.weights.data = self.weights.data + lrate * error.reshape(self.inpDim, 1).matmul(self.h.reshape(1, self.hidDim)) 
-        self.weights[self.weights < 0] = 0
+        self.weights.data[self.weights < 0] = 0
 
     def forward(self, x):
         # Here the forward pass is simply a linear function
-        g = self.a * x.matmul(self.weights) + self.b
+        g = self.a * self.weights.t().matmul(x) + self.b
         h = self.nonlin(g)
-        out = h.matmul(self.weights.t())
+        out = self.weights.matmul(h)
 
-        self.g[:] = g.detach()
-        self.h[:] = h.detach()
+        self.g[:, :] = g.detach()
+        self.h[:, :] = h.detach()
         return out
 
 
