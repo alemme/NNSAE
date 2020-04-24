@@ -60,9 +60,9 @@ class Nnsae(nn.Module):
         self.hidDim = hidDim  # number of hidden neurons
         self.weights = torch.zeros(inpDim, hidDim, requires_grad=True)
         self.scale = 0.025
-        self.weights.data.uniform_(self.scale, self.scale*2)
-        #self.weights.data = self.scale * (2 * torch.rand(inpDim, hidDim) - 
-        #                                0.5 * torch.ones(inpDim,hidDim)) + self.scale
+        #self.weights.data.uniform_(self.scale, self.scale*2)
+        self.weights.data = self.scale * (2 * torch.rand(inpDim, hidDim) - 
+                                        0.5 * torch.ones(inpDim,hidDim)) + self.scale
         self.nonlin = torch.sigmoid
         self.nonneg = lambda x: x
 
@@ -71,7 +71,7 @@ class Nnsae(nn.Module):
         # neural activity before non-linearity
         self.h = torch.zeros(self.hidDim, batch_size)  # hidden neuron activation
         self.g = torch.zeros(self.hidDim, batch_size)  # pre hidden neuron
-        self.a = torch.randn(self.hidDim, 1)
+        self.a = torch.ones(self.hidDim, 1)
         self.b = torch.ones(self.hidDim, 1) * (-3.0)
 
         # learning rate for synaptic plasticity of read-out layer (RO)
@@ -93,14 +93,14 @@ class Nnsae(nn.Module):
     def bpdc(self, error):
         # calculate adaptive learning rate
         lrate = self.lrateRO/(self.regRO + sum(self.h**2))
-        self.weights.data = self.weights.data + lrate * error.reshape(self.inpDim, 1).matmul(self.h.reshape(1, self.hidDim)) 
+        self.weights.data = self.weights.data + lrate * error.view(self.inpDim, 1).mm(self.h.view(1, self.hidDim)) 
         self.weights.data[self.weights < 0] = 0
 
     def forward(self, x):
         # Here the forward pass is simply a linear function
-        g = self.a * self.weights.t().matmul(x) + self.b
+        g = self.a * self.weights.t().mm(x) + self.b
         h = self.nonlin(g)
-        out = self.weights.matmul(h)
+        out = self.weights.mm(h)
 
         self.g[:, :] = g.detach()
         self.h[:, :] = h.detach()

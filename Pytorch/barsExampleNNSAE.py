@@ -29,15 +29,17 @@
 #                           alemme_at_cor-lab.uni-bielefeld.de
 
 # Make all numpy available via shorter 'num' prefix
-import random
-from numpy.matlib import zeros
-from createBarsDataSet import createBarsDataSet
-from plotImagesOnGrid import plotImagesOnGrid
-import torch
-from torch.utils.data import TensorDataset, DataLoader
-import NNSAE as nn
-
 import math
+import NNSAE as nn
+from torch.utils.data import TensorDataset, DataLoader
+import torch
+from plotImagesOnGrid import plotImagesOnGrid
+from createBarsDataSet import createBarsDataSet
+from numpy.matlib import zeros
+import numpy as np
+np.random.seed(1234)
+torch.manual_seed(1234)
+
 
 # Configuration
 # data parameters
@@ -61,7 +63,7 @@ meanIP = 0.2
 
 # Execution
 # data creation
-X, xTest = createBarsDataSet(width, numSamples)
+X, xTest = createBarsDataSet(width, numSamples, 1, True)
 # rescale data for better numeric performance
 X = 0.25 * X
 dataset = TensorDataset(torch.from_numpy(X).float())
@@ -75,11 +77,11 @@ bpdc = nn.BackpropagationDecoralation(
 loss_fkt = torch.nn.modules.MSELoss(reduction='sum')
 net.lrateRO = lrateRO
 net.lrateIP = lrateIP
-# net.decayN = alpha
-# net.decayP = beta
+net.decayN = alpha
+net.decayP = beta
 
 # training
-for e in range(1, numEpochs):
+for e in range(1, numEpochs+1):
     gl_loss = 0
 
     for i, data in enumerate(dataloader):
@@ -88,13 +90,13 @@ for e in range(1, numEpochs):
         out = net(inp.t()).t()
         loss = loss_fkt(inp, out)
         loss.backward()
-        #bpdc.step()
+        # bpdc.step()
         with torch.no_grad():
             net.bpdc(inp-out)
             net.ip()
             # print(loss)
         gl_loss += loss.item()
-        
+
     #print(f'epoch ({e}\{numEpochs}) loss {gl_loss/numSamples}')
     print('epoch ({}\{}) loss {}'.format(e, numEpochs, gl_loss/numSamples))
 ################## Evaluation ###########################
