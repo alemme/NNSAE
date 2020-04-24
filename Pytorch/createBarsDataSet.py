@@ -5,7 +5,6 @@ import numpy as np
 import numpy.matlib as M
 # Make some matlib functions accessible directly at the top level via, e.g. rand(3,3)
 from numpy.matlib import rand, zeros, ones
-import torch
 
 
 def createBarsDataSet(dim=10, numTrain=10000, numTest=5000, nonlinear=True):

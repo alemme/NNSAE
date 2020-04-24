@@ -28,8 +28,8 @@
 #                           freinhar_at_cor-lab.uni-bielefeld.de
 #                           alemme_at_cor-lab.uni-bielefeld.de
 
-# Make all numpy available via shorter 'num' prefix
 import numpy as np
+np.random.seed(1234)
 # Make all matlib functions accessible at the top level via M.func()
 import numpy.matlib as M
 # Make some matlib functions accessible directly at the top level via, e.g. rand(3,3)
@@ -58,7 +58,7 @@ beta = 0           # beta [0..1] is the decay rate for positive weights
 #alpha = 1e-6;
 #beta = 1e-6;
 
-numEpochs = 30     # number of sweeps through data for learning
+numEpochs = 10     # number of sweeps through data for learning
 lrateRO = 0.01     # learning rate for synaptic plasticity of the read-out layer
 lrateIP = 0.001    # learning rate for intrinsic plasticity
 
@@ -78,10 +78,9 @@ net.decayP = beta
 
 
 # training
-for e in range(1, numEpochs):
-    print(f'epoch {e}\{numEpochs}')
-    net.train(X)
-
+for e in range(1, numEpochs+1):
+    mse = net.train(X)
+    print(f'epoch {e}\{numEpochs}, MSE = {mse}')
 
 ################## Evaluation ###########################
 # evaluation of basis images
@@ -92,15 +91,14 @@ cnt = 0
 unused = []
 w = net.W.T
 v = zeros((w.shape))
-for i in range(1, netDim):
+for i in range(netDim):
     if w[i, :].max() > threshold:  # this basis image is "used"
-        cnt = cnt + 1
         v[cnt, :] = w[i, :]
+        cnt += 1
     else:
         unused.append(i)
 
-
-for i in range(1, len(unused)):
+for i in range(len(unused)):
     v[cnt+i, :] = w[unused[i], :]
 
 print(f'used neurons = {cnt}\{netDim}')
@@ -113,4 +111,4 @@ if netDim >= 50:
     numCols = 10
 
 plotImagesOnGrid(v, int(math.ceil(netDim/numCols)), numCols, width,
-                 width, range(0, 11), './fig/NNSAE-bars-%d-basis.png' % (netDim))
+                 width, range(netDim), './fig/NNSAE-bars-%d-basis.png' % (netDim))

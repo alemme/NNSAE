@@ -46,7 +46,6 @@ torch.manual_seed(1234)
 numSamples = 10000  # number of images
 width = 9  # image width = height
 
-
 # network parameters
 inpDim = width**2  # number of input/output neurons
 netDim = 2 * width  # number of hidden neurons matches latent causes
@@ -73,8 +72,9 @@ dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
 net = nn.Nnsae(inpDim, netDim)
 
 bpdc = nn.BackpropagationDecoralation(
-    [net.weights], [net.h], lrateRO=lrateRO)
-loss_fkt = torch.nn.modules.MSELoss(reduction='sum')
+    [net.weights], [net.h], lrateRO=lrateRO*50
+)
+loss_fkt = torch.nn.modules.MSELoss(reduction='mean')
 net.lrateRO = lrateRO
 net.lrateIP = lrateIP
 net.decayN = alpha
@@ -87,18 +87,26 @@ for e in range(1, numEpochs+1):
     for i, data in enumerate(dataloader):
         bpdc.zero_grad()
         inp = data[0]
+        # forward path
         out = net(inp.t()).t()
+        # calculate loss
         loss = loss_fkt(inp, out)
         loss.backward()
-        # bpdc.step()
-        with torch.no_grad():
-            net.bpdc(inp-out)
-            net.ip()
-            # print(loss)
+
+        bpdc.step()
+        # net.bpdc((inp-out).t())
+
+        # non negative constraint
+        net.weights.data[net.weights < 0] = 0
+        # intrinsic plasticity
+        net.ip()
+
+        # log loss
         gl_loss += loss.item()
 
-    #print(f'epoch ({e}\{numEpochs}) loss {gl_loss/numSamples}')
+    # print(f'epoch ({e}\{numEpochs}) loss {gl_loss/numSamples}')
     print('epoch ({}\{}) loss {}'.format(e, numEpochs, gl_loss/numSamples))
+
 ################## Evaluation ###########################
 # evaluation of basis images
 threshold = 0.1  # parameter for analysis of weights
@@ -129,4 +137,4 @@ if netDim >= 50:
     numCols = 10
 
 plotImagesOnGrid(v, int(math.ceil(netDim/numCols)), numCols, width,
-                 width, range(0, netDim), './fig/NNSAE-bars-%d-basis.png' % (netDim))
+                 width, range(netDim), './fig/NNSAE-bars-%d-basis.png' % (netDim))

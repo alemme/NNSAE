@@ -18,24 +18,24 @@ def createBarsDataSet(dim=10, numTrain=10000, numTest=5000, nonlinear=1):
     imgdim = dim * dim
     X = zeros((numTrain+numTest, imgdim))
 
-    for k in range(0, numTrain+numTest):
+    for k in range(numTrain+numTest):
         x = zeros((dim, dim))
-        for z in range(0, 2):
+        for z in range(2):
             i = np.random.permutation(range(dim))
             j = np.random.permutation(range(dim))
             if nonlinear == 1:
                 x[i[z], :] = 1.0
                 x[:, j[z]] = 1.0
             else:
-                x[i[z], :] = x[i[z], :] + 1.0
-                x[:, j[z]] = x[:, j[z]] + 1.0
+                x[i[z], :] += 1.0
+                x[:, j[z]] += 1.0
 
         if not nonlinear:
             x = x / 4
 
         X[k, :] = x.reshape(1, imgdim)
 
-    Xtrain = X[0:numTrain, :]
+    Xtrain = X[:numTrain, :]
     Xtest = X[numTrain+1:, :]
 
     return Xtrain, Xtest

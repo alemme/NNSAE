@@ -60,9 +60,9 @@ class Nnsae(nn.Module):
         self.hidDim = hidDim  # number of hidden neurons
         self.weights = torch.zeros(inpDim, hidDim, requires_grad=True)
         self.scale = 0.025
-        #self.weights.data.uniform_(self.scale, self.scale*2)
-        self.weights.data = self.scale * (2 * torch.rand(inpDim, hidDim) - 
-                                        0.5 * torch.ones(inpDim,hidDim)) + self.scale
+        # self.weights.data.uniform_(self.scale, self.scale*2)
+        self.weights.data = self.scale * (2 * torch.rand(inpDim, hidDim) -
+                                        0.5 * torch.ones(inpDim, hidDim)) + self.scale
         self.nonlin = torch.sigmoid
         self.nonneg = lambda x: x
 
@@ -82,9 +82,9 @@ class Nnsae(nn.Module):
 
         self.lrateIP = 0.001  # learning rate for intrinsic plasticity (IP)
         self.meanIP = 0.2  # desired mean activity, a parameter of IP
-    
+
     def ip(self):
-        h = self.h.detach()
+        h = self.h
         tmp = self.lrateIP * (1.0 - (2.0 + 1.0/self.meanIP) * h + (h**2) / self.meanIP)
         self.b += tmp
         a_tmp = self.lrateIP / self.a + self.g * tmp
@@ -93,13 +93,12 @@ class Nnsae(nn.Module):
     def bpdc(self, error):
         # calculate adaptive learning rate
         lrate = self.lrateRO/(self.regRO + sum(self.h**2))
-        self.weights.data = self.weights.data + lrate * error.view(self.inpDim, 1).mm(self.h.view(1, self.hidDim)) 
-        self.weights.data[self.weights < 0] = 0
+        self.weights.data = self.weights.data + lrate * error.mm(self.h.t())
 
     def forward(self, x):
         # Here the forward pass is simply a linear function
-        g = self.a * self.weights.t().mm(x) + self.b
-        h = self.nonlin(g)
+        g = self.weights.t().mm(x)
+        h = self.nonlin(self.a * g + self.b)
         out = self.weights.mm(h)
 
         self.g[:, :] = g.detach()
@@ -138,13 +137,10 @@ class BackpropagationDecoralation(Optimizer):
                 grad = p.grad.data
                 if grad is None:
                     continue
-                # calculate adaptive learning rate
-                # hii = torch.eye(h.shape[0]) * h
-                lrate = (self.lrateRO/(self.regRO + sum(h**2)))
-                # d_p = grad.matmul(lrate)
-                d_p = -lrate * grad
 
+                # calculate adaptive learning rate
+                lrate = (self.lrateRO/(self.regRO + sum(h**2)))
+                d_p = -lrate * grad
                 p.data.add_(d_p)
-                p.data[p.data < 0] = 0
 
         return loss
