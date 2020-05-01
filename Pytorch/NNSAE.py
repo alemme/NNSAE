@@ -60,14 +60,14 @@ class Nnsae(nn.Module):
         self.hidDim = hidDim  # number of hidden neurons
         self.weights = torch.zeros(inpDim, hidDim, requires_grad=True)
         self.scale = 0.025
-        # self.weights.data.uniform_(self.scale, self.scale*2)
-        self.weights.data = self.scale * (2 * torch.rand(inpDim, hidDim) -
-                                        0.5 * torch.ones(inpDim, hidDim)) + self.scale
+        self.weights.data.uniform_(0.0, 0.05)
+        # self.weights.data = self.scale * (2 * torch.rand(inpDim, hidDim) -
+        #                                 0.5 * torch.ones(inpDim, hidDim)) + self.scale
         self.nonlin = torch.sigmoid
         self.nonneg = lambda x: x
 
-        self.inp = torch.zeros(self.inpDim, batch_size)  # vector holding current input
-        self.out = torch.zeros(self.hidDim, batch_size)  # output neurons
+        self.inp = torch.zeros(self.inpDim, 1)  # vector holding current input
+        self.out = torch.zeros(self.hidDim, 1)  # output neurons
         # neural activity before non-linearity
         self.h = torch.zeros(self.hidDim, batch_size)  # hidden neuron activation
         self.g = torch.zeros(self.hidDim, batch_size)  # pre hidden neuron
@@ -86,14 +86,14 @@ class Nnsae(nn.Module):
     def ip(self):
         h = self.h
         tmp = self.lrateIP * (1.0 - (2.0 + 1.0/self.meanIP) * h + (h**2) / self.meanIP)
-        self.b += tmp
+        self.b += tmp.sum(1, keepdim=True)
         a_tmp = self.lrateIP / self.a + self.g * tmp
-        self.a += a_tmp
+        self.a += a_tmp.sum(1, keepdim=True)
 
     def bpdc(self, error):
         # calculate adaptive learning rate
-        lrate = self.lrateRO/(self.regRO + sum(self.h**2))
-        self.weights.data = self.weights.data + lrate * error.mm(self.h.t())
+        lrate = (self.lrateRO/(self.regRO + (self.h**2).sum(0, keepdim=True)))
+        self.weights.data += error.mm(torch.diag(lrate) * (self.h).t())
 
     def forward(self, x):
         # Here the forward pass is simply a linear function
@@ -139,7 +139,7 @@ class BackpropagationDecoralation(Optimizer):
                     continue
 
                 # calculate adaptive learning rate
-                lrate = (self.lrateRO/(self.regRO + sum(h**2)))
+                lrate = (self.lrateRO/(self.regRO + (h**2).sum(0, keepdim=True)))
                 d_p = -lrate * grad
                 p.data.add_(d_p)
 
