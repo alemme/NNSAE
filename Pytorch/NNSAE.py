@@ -105,6 +105,9 @@ class Nnsae(nn.Module):
         self.h[:, :] = h.detach()
         return out
 
+    def save_state_dict(self, fileName):
+        torch.save(self.state_dict(), fileName)
+
 
 class BackpropagationDecoralation(Optimizer):
     # learning rate for synaptic plasticity of read-out layer (RO)
