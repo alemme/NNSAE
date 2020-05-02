@@ -1,34 +1,4 @@
-# This script trains a NNSAE on the synthetic bars data set identifying
-# the independent causes that explain the images. There are 2*dim causes
-# in the data, where dim is the height/width of the bars images.
-# Play around with the number of hidden neurons in the NNSAE (netDim parameter below)
-# and explore its effects: Too many neurons result in "unused" basis images (see paper).
-# Also try out different decay factor settings for alpha and beta below.
-#
-###########################################################################
-###          Copyright (c) 2012 F. R. Reinhart, CoR-Lab                 ###
-###          Univertiy Bielefeld, Germany, http://cor-lab.de            ###
-###########################################################################
-#
-# The program is free for non-commercial and academic use. Please contact the
-# author if you are interested in using the software for commercial purposes.
-# The software must not be modified or distributed without prior permission
-# of the authors. Please acknowledge the authors in any academic publications
-# that have made use of this code or part of it. Please use this BibTex for
-# reference:
-#
-#    A. Lemme, R. F. Reinhart and J. J. Steil.
-#    "Online learning and generalization of parts-based image representations
-#     by Non-Negative Sparse Autoencoders". Submitted to Neural Networks.
-#                              OR
-#    A. Lemme, R. F. Reinhart and J. J. Steil. "Efficient online learning of
-#    a non-negative sparse autoencoder". In Proc. ESANN, 2010.
-#
-# Please send your feedbacks or questions to:
-#                           freinhar_at_cor-lab.uni-bielefeld.de
-#                           alemme_at_cor-lab.uni-bielefeld.de
 
-# Make all numpy available via shorter 'num' prefix
 import os
 import math
 import NNSAE as nn
@@ -55,7 +25,7 @@ test_loader = torch.utils.data.DataLoader(
         transforms.ToTensor()
     ])), batch_size=batch_size, shuffle=True, drop_last=True, **kwargs)
 
-numEpochs = 10  # number of sweeps through data for learning
+numEpochs = 100  # number of sweeps through data for learning
 lrateRO = 0.01  # learning rate for synaptic plasticity of the read-out layer
 lrateIP = 0.0001  # learning rate for intrinsic plasticity
 meanIP = 0.2
@@ -106,6 +76,7 @@ if not os.path.isfile(fileName):
     net.save_state_dict(fileName)
 else:
     net.load_state_dict(torch.load(fileName))
+    print(net)
 ################## Evaluation ###########################
 # evaluation of basis images
 threshold = 0.1  # parameter for analysis of weights

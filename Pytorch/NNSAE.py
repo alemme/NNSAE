@@ -60,11 +60,6 @@ class Nnsae(nn.Module):
         super(Nnsae, self).__init__()
         self.inpDim = inpDim  # number of input neurons (and output neurons)
         self.hidDim = hidDim  # number of hidden neurons
-        self.weights = Parameter(torch.zeros(inpDim, hidDim, requires_grad=True))
-        self.scale = 0.025
-        self.weights.data.uniform_(0.0, 0.05)
-        # self.weights.data = self.scale * (2 * torch.rand(inpDim, hidDim) -
-        #                                 0.5 * torch.ones(inpDim, hidDim)) + self.scale
         self.nonlin = torch.sigmoid
         self.nonneg = lambda x: x
 
@@ -75,8 +70,12 @@ class Nnsae(nn.Module):
         self.g = torch.zeros(self.hidDim, batch_size)  # pre hidden neuron
         self.a = Parameter(torch.ones(self.hidDim, 1))
         self.b = Parameter(torch.ones(self.hidDim, 1) * (-3.0))
+        self.weights = Parameter(torch.zeros(inpDim, hidDim))
+        # self.scale = 0.025
+        # self.weights.data.uniform_(0.0, 0.05)
+        # self.weights.data = self.scale * (2 * torch.rand(inpDim, hidDim) -
+        #                                 0.5 * torch.ones(inpDim, hidDim)) + self.scale
         nn.init.kaiming_uniform_(self.weights, a=math.sqrt(5))
-
         fan_in, _ = nn.init._calculate_fan_in_and_fan_out(self.weights)
         bound = 1 / math.sqrt(fan_in)
         nn.init.uniform_(self.b, -bound, bound)
@@ -84,8 +83,6 @@ class Nnsae(nn.Module):
         # learning rate for synaptic plasticity of read-out layer (RO)
         self.lrateRO = 0.01
         self.regRO = 0.0002  # numerical regularization constant
-        self.decayP = 0  # decay factor for positive weights [0..1]
-        self.decayN = 1  # decay factor for negative weights [0..1]
 
         self.lrateIP = 0.001  # learning rate for intrinsic plasticity (IP)
         self.meanIP = 0.2  # desired mean activity, a parameter of IP

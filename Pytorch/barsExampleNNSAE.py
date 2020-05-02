@@ -6,7 +6,7 @@
 # Also try out different decay factor settings for alpha and beta below.
 #
 ###########################################################################
-###          Copyright (c) 2012 F. R. Reinhart, CoR-Lab                 ###
+###          Copyright (c) 2012 A. Lemme, F. R. Reinhart, CoR-Lab       ###
 ###          Univertiy Bielefeld, Germany, http://cor-lab.de            ###
 ###########################################################################
 #
@@ -19,16 +19,12 @@
 #
 #    A. Lemme, R. F. Reinhart and J. J. Steil.
 #    "Online learning and generalization of parts-based image representations
-#     by Non-Negative Sparse Autoencoders". Submitted to Neural Networks.
-#                              OR
+#     by Non-Negative Sparse Autoencoders". Neural Networks, vol. 33, pp. 194-203, 2012
+#     doi = "https://doi.org/10.1016/j.neunet.2012.05.003"#
+#                                   OR
 #    A. Lemme, R. F. Reinhart and J. J. Steil. "Efficient online learning of
 #    a non-negative sparse autoencoder". In Proc. ESANN, 2010.
-#
-# Please send your feedbacks or questions to:
-#                           freinhar_at_cor-lab.uni-bielefeld.de
-#                           alemme_at_cor-lab.uni-bielefeld.de
 
-# Make all numpy available via shorter 'num' prefix
 import math
 import NNSAE as nn
 from torch.utils.data import TensorDataset, DataLoader
