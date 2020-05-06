@@ -20,6 +20,6 @@ reference:
 
 
 ## START
-Execute the barsExampleNNSAE.py script. Have fun!
+1. Execute the barsExampleNNSAE.py script
+1. Execute the mnistExampleNNSAE.py script
 
-another implementation in python can be found in the [opencog](http://wiki.opencog.org/w/The_Open_Cognition_Project) package [here](https://github.com/opencog/python-destin/blob/master/destin/auto_encoder.py)
