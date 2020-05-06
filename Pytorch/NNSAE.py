@@ -3,19 +3,8 @@
 # NNSAE. The NNSAE uses shared weights. The class is designed to be used with
 # non-negative data distributions.
 #
-# HowTo use this class:
-# - Preparations:
-#   1) create an NNSAE object by calling the constructor with your
-#   specifications and call the method init
-#   2) after loading the dataset, train the NNSAE by calling the method
-#   train with your dataset.
-#   NOTE: if you want to apply multiple training epochs call this function repeatedly
-# - Apply trained NNSAE to new data:
-#   1) Call method apply with the new data sample and compare with the
-#   reconstruction (output argument).
-#
 ###########################################################################
-###          Copyright (c) 2016 F. A. Lemme, R. F. Reinhart   , CoR-Lab ###
+###          Copyright (c) 2012 A. Lemme, F. R. Reinhart, CoR-Lab       ###
 ###          Univertiy Bielefeld, Germany, http://cor-lab.de            ###
 ###########################################################################
 #
@@ -28,14 +17,12 @@
 #
 #    A. Lemme, R. F. Reinhart and J. J. Steil.
 #    "Online learning and generalization of parts-based image representations
-#     by Non-Negative Sparse Autoencoders". Submitted to Neural Networks,
-#                              OR
+#     by Non-Negative Sparse Autoencoders". Neural Networks, vol. 33, pp. 194-203, 2012
+#     doi = "https://doi.org/10.1016/j.neunet.2012.05.003"#
+#                                   OR
 #    A. Lemme, R. F. Reinhart and J. J. Steil. "Efficient online learning of
 #    a non-negative sparse autoencoder". In Proc. ESANN, 2010.
-#
-# Please send your feedbacks or questions to:
-#                           freinhar_at_cor-lab.uni-bielefeld.de
-#                           alemme_at_cor-lab.uni-bielefeld.de
+
 
 from __future__ import print_function
 from torch.optim.optimizer import Optimizer
@@ -71,14 +58,9 @@ class Nnsae(nn.Module):
         self.a = Parameter(torch.ones(self.hidDim, 1))
         self.b = Parameter(torch.ones(self.hidDim, 1) * (-3.0))
         self.weights = Parameter(torch.zeros(inpDim, hidDim))
-        # self.scale = 0.025
-        # self.weights.data.uniform_(0.0, 0.05)
-        # self.weights.data = self.scale * (2 * torch.rand(inpDim, hidDim) -
-        #                                 0.5 * torch.ones(inpDim, hidDim)) + self.scale
-        nn.init.kaiming_uniform_(self.weights, a=math.sqrt(5))
-        fan_in, _ = nn.init._calculate_fan_in_and_fan_out(self.weights)
-        bound = 1 / math.sqrt(fan_in)
-        nn.init.uniform_(self.b, -bound, bound)
+        self.scale = 0.025
+        self.weights.data = self.scale * (2 * torch.rand(inpDim, hidDim) -
+                                         0.5 * torch.ones(inpDim, hidDim)) + self.scale
 
         # learning rate for synaptic plasticity of read-out layer (RO)
         self.lrateRO = 0.01
