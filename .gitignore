@@ -1,1 +1,6 @@
 .vscode/
+*__pycache__**
+*fig**
+*.pyc
+*.pt
+*.DS_Store

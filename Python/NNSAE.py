@@ -71,7 +71,6 @@ class NNSAE:
         # shared network weights, i.e. used to compute hidden layer activations and estimated outputs
         self.W = scale * (2 * rand((self.inpDim, self.hidDim)) -
                           0.5 * ones((self.inpDim, self.hidDim))) + scale
-        print(self.W.shape)
 
         # learning rate for synaptic plasticity of read-out layer (RO)
         self.lrateRO = 0.01
@@ -93,12 +92,15 @@ class NNSAE:
         # output
         #  - Xhat reconstructed Input sampels N x M
         # for entire data matrix
+        numSamples = X.shape[1]
         Xhat = zeros(X.shape)
-        for i in range(1, X.shape[1]):
+        losses = zeros(numSamples)
+        for i in range(numSamples):
             self.inp = X[i, :].T
             self.update()
             Xhat[i, :] = self.out.T
-        return Xhat
+            losses[i] = np.mean((self.inp - self.out)**2)
+        return Xhat, np.mean(losses)
 
     # Train the network
     # This function adapts the weight matrix W and parameters a and b
@@ -109,11 +111,12 @@ class NNSAE:
 
     def train(self, X):
         numSamples = X.shape[0]
+        losses = zeros(numSamples)
         # randperm(numSamples); #for randomized presentation
         p = np.random.permutation(range(numSamples))
-        for i in range(1, numSamples):
+        for i, ii in enumerate(p):
             # set input
-            self.inp = X[p[i], :].T  # forward propagation of activities
+            self.inp = X[ii, :].T  # forward propagation of activities
             self.update()
 
             # calculate adaptive learning rate
@@ -121,9 +124,10 @@ class NNSAE:
 
             # calculate error
             error = self.inp - self.out
+            losses[0, i] = (error.T * error)/self.inpDim
 
             # update weights
-            self.W = self.W + lrate[0, 0] * np.multiply(error, self.h.T)
+            self.W = self.W + lrate[0, 0] * (error * self.h.T)
 
             # decay function for positive weights
             if self.decayP > 0:
@@ -147,6 +151,8 @@ class NNSAE:
             self.b = self.b + tmp
             self.a = self.a + self.lrateIP * hones / \
                 self.a + np.multiply(self.g, tmp)
+
+        return np.mean(losses)
 
     # Update network activation
     # This helper function computes the new activation pattern of the
