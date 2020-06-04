@@ -48,7 +48,6 @@ class Nnsae(nn.Module):
         self.inpDim = inpDim  # number of input neurons (and output neurons)
         self.hidDim = hidDim  # number of hidden neurons
         self.nonlin = torch.sigmoid
-        self.nonneg = lambda x: x
 
         self.inp = torch.zeros(self.inpDim, 1)  # vector holding current input
         self.out = torch.zeros(self.hidDim, 1)  # output neurons
@@ -68,9 +67,25 @@ class Nnsae(nn.Module):
 
         self.lrateIP = 0.001  # learning rate for intrinsic plasticity (IP)
         self.meanIP = 0.2  # desired mean activity, a parameter of IP
+        self._cuda = False
 
     def __setstate__(self, state):
         super(Nnsae, self).__setstate__(state)
+
+    @property
+    def cuda(self):
+        return self._cuda
+
+    def to(self, device):
+        super().to(device)
+        self._cuda = device.type != 'cpu'
+        self.a.to(device)
+        self.b.to(device)
+        self.h = self.h.to(device)
+        self.g = self.g.to(device)
+        self.out.to(device)
+        self.inp.to(device)
+        self.weights.to(device)
 
     def ip(self):
         h = self.h
@@ -81,8 +96,21 @@ class Nnsae(nn.Module):
 
     def bpdc(self, error):
         # calculate adaptive learning rate
+        device = self.weights.device
         lrate = (self.lrateRO/(self.regRO + (self.h**2).sum(0, keepdim=True)))
-        self.weights.data += error.mm(torch.diag(lrate) * (self.h).t())
+        self.weights.data += error.mm(torch.diag(lrate).to(device) * (self.h).t())
+
+    def fit(self, inp):
+        # forward path
+        out = self.forward(inp)
+        # bpdc.step()
+        error = inp - out
+        self.bpdc(error)
+        # non negative constraint
+        self.weights.data[self.weights < 0] = 0
+        # intrinsic plasticity
+        self.ip()
+        return out, error
 
     def forward(self, x):
         # Here the forward pass is simply a linear function

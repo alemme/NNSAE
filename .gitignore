@@ -4,3 +4,4 @@
 *.pyc
 *.pt
 *.DS_Store
+data/
