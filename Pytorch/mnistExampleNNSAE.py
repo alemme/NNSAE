@@ -155,9 +155,9 @@ def add_model_args(parser):
     """model arguments."""
 
     group = parser.add_argument_group('model', 'model configurations')
-    group.add_argument('-hid', '--hidden-dim', type=int, default=10,
+    group.add_argument('-hid', '--hidden-dim', type=int, default=100,
                        metavar='N',
-                       help='number of neurons in hidden layer (default: 1000')
+                       help='number of neurons in hidden layer (default: 100')
 
     return parser
 

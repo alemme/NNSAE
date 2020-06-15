@@ -96,9 +96,8 @@ class Nnsae(nn.Module):
 
     def bpdc(self, error):
         # calculate adaptive learning rate
-        device = self.weights.device
-        lrate = (self.lrateRO/(self.regRO + (self.h**2).sum(0, keepdim=True)))
-        self.weights.data += error.mm(torch.diag(lrate).to(device) * (self.h).t())
+        lrate = (self.lrateRO/(self.regRO + (self.h**2).sum(0, keepdim=True))).diag()
+        self.weights.data += error.mm(lrate * (self.h).t())
 
     def fit(self, inp):
         # forward path
