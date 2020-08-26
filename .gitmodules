@@ -1,0 +1,3 @@
+[submodule "Torch-lua"]
+	path = Torch-lua
+	url = https://github.com/alemme/luatorch-nnsae.git
