@@ -4,3 +4,6 @@
 [submodule "Matlab"]
 	path = Matlab
 	url = https://github.com/alemme/matlab-nnsae.git
+[submodule "Python"]
+	path = Python
+	url = https://github.com/alemme/py-nnsae.git
