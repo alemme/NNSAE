@@ -7,3 +7,6 @@
 [submodule "Python"]
 	path = Python
 	url = https://github.com/alemme/py-nnsae.git
+[submodule "Pytorch"]
+	path = Pytorch
+	url = https://github.com/alemme/pytorch-nnsae.git
