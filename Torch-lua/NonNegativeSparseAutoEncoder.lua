@@ -108,7 +108,7 @@ function NonNegativeSparseAutoEncoder:train(X)
 
         --calculate error
         local error = self.inp - self.out        --update weights
-        self.W = self.W + error * self.h:t()  * lrate
+        self.W = self.W + error * self.h:t() * lrate
 
         --decay function for positive weights
         if self.decayP > 0 then
@@ -130,7 +130,7 @@ function NonNegativeSparseAutoEncoder:train(X)
         local tmp = self.lrateIP * (hones - (2.0 + 1.0/self.meanIP) * self.h + torch.pow(self.h, 2)/self.meanIP)
 
         self.b = self.b + tmp
-        self.a = self.a + self.lrateIP *torch.cdiv( hones, self.a) + torch.cmul(self.g,tmp)
+        self.a = self.a + self.lrateIP * torch.cdiv(hones, self.a) + torch.cmul(self.g,tmp)
     end
 end
 
@@ -149,6 +149,4 @@ function NonNegativeSparseAutoEncoder:update()
 end
 
 return NonNegativeSparseAutoEncoder
-
-
 
